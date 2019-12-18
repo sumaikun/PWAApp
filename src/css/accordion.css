@@ -1,0 +1,36 @@
+.accordion {
+    transition: 0.4s;
+}
+
+
+.accordion:before {
+    margin-top: -3px;
+    /*content: '\02795';*/
+}
+
+.accordion.active:before {
+    /*content: "\2796";*/
+}
+
+div.panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+
+.list__item__center {
+    padding-left: 5px;
+}
+
+.list__accordion__center {
+    flex-grow: 1;
+    margin-left: 15px;
+    width: 60%;
+    white-space: normal;
+}

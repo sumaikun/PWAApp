@@ -1,0 +1,200 @@
+.margin{
+    margin-left: 3%;
+    margin-right: 5%;
+}
+.margin2{
+    position:absolute;  
+    left:15px;
+    margin-left: 85%; 
+}
+.review-status {
+    background-color: #8dc63f;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.nextButton {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    color:#faa61f;
+    border:2px solid #faa61f;
+    position:absolute;  
+    left:25px;
+    margin-top: -15px;
+    margin-left: 70%;
+}
+
+.Green{
+  background-color: #00FF00 !important;
+}
+.Yellow{
+  background-color: #fffd03 !important;
+}
+.Orange{
+  background-color: #f6931b !important;
+}
+.Red{
+  background-color: #fe0100 !important;
+}
+.RedWine{
+  background-color: #891a20 !important;
+}
+.left{
+  text-align: left !important;
+}
+.first-gap-list-element {
+  height: 25px;
+  background-color: #efeff4
+}
+.gap-list-element {
+  height: 10px;
+  background-color: #efeff4
+}
+
+/* Project Management */
+/* Card Button Title */
+.project-management-title-font {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 900;
+}
+
+/* Project List */
+.project-list-title-font {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+}
+
+.project-list-project-name {
+  color: #352865;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.project-list-project-info {
+    color: #e6e7e8;
+    font-size: 10px;
+}
+
+.project-list-functional-unit {
+  flex-grow: 1;
+  margin-left: 15px;
+  width: 70%;
+  white-space: normal;
+  /* Font */
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
+}
+
+  /* Collapse Menu */
+    /* Footer */
+.collapse-menu-footer {
+    display: flex;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.collapse-menu-footer-futuro {
+    color: rgba(255, 198, 39, 0.3);
+}
+    /* List */
+.collapse-menu-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+/* Forest Unit */
+.plus-icon {
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    margin-top: 7px;
+}
+
+.plus-icon-container {
+    margin-right: 20px;
+    margin-top: 8px;
+}
+
+div.panel.show {
+    max-height: max-content !important;
+}
+
+.list-center {
+    flex-grow: 1;
+    margin-left: 15px;
+    width: 60%;
+    white-space: normal;
+}
+
+.list-margin {
+    width: 95%;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+
+.button-container {
+    background-color: #f1f2f2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.arrow-button-container {
+    background-color: #f1f2f2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tree-dots-button {
+    color: orange;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.list-counter {
+    color: #e6e7e8;
+}
+
+.white-space-control {
+    white-space: normal;
+}
+
+.margin-between-left {
+    margin-left: 5px;
+}
+
+.margin-between-right {
+    margin-right: 5px;
+}
+
+.filter-container {
+    backgroun-color: orange;
+    position: fixed;
+    top: 56px;
+    z-index: 1;
+    width: 100%;
+}
+
+.list-container-and-header {
+    margin: 0 auto;
+    position: relative;
+    margin-top: 128px;
+}
+
+.not-found {
+    margin: 0 auto;
+    position: relative;
+    margin-top: 90px;
+}

@@ -1,0 +1,37 @@
+.ballonBackg {
+  background: url(http://cdn1-www.playstationlifestyle.net/assets/uploads/gallery/firewatch-gallery/firewatch_5.jpg);
+  height: 100%;
+}
+
+.ballaozin {
+  width: 203px;
+  height: 265px;
+  background-image: url("http://ionic.io/img/home/ionic-balloon.png");
+  background-repeat: no-repeat;
+  position: absolute;
+  animation: voavoa 4s ease-in-out infinite, vaisproslado 80s ease-in-out infinite;
+}
+
+@keyframes voavoa {
+    0% {transform: translateY(0);}
+    50% {transform: translateY(100px);}
+   100% {transform: translateY(0);}
+}
+
+@keyframes vaisproslado {
+     0% {
+    left: 0%;
+  }
+  20% {
+    left: 20%;
+  }
+  50% {
+    left: 80%;
+  }
+  70% {
+    left: 40%;
+  }
+  100% {
+    left: 0%;
+  }
+}

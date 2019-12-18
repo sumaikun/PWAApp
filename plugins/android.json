@@ -1,0 +1,32 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.plantar.app"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.plantar.app"
+    },
+    "cordova-plugin-camera": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "com.plantar.app"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.plantar.app"
+    },
+    "cordova-plugin-background-mode": {
+      "PACKAGE_NAME": "com.plantar.app"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.plantar.app"
+    }
+  }
+}

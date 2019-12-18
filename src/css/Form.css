@@ -1,0 +1,97 @@
+@import url(https://fonts.googleapis.com/css?family=Lily+Script+One);
+
+body {
+	margin:0;
+	font-family:arial,tahoma,sans-serif;
+	font-size:14px;
+	font-weight:normal;
+	direction:ltr;
+}
+
+.form {
+	/*margin:10% auto 0 auto;*/
+  margin: 5% 5% 5% 5%;
+  padding:3%;
+	height:auto;
+	overflow:hidden;
+	background:white;
+	border-radius:10px;
+}
+
+.simpleForm
+{
+	overflow:hidden;
+	background:white;
+}
+
+
+form label {
+	font-size:14px;
+	color:darkgray;
+	cursor:pointer;
+  width: 100%;
+}
+
+form label,
+form input, form textarea {
+	float:left;
+	clear:both;
+}
+
+form select {
+	margin:2% 0;
+	padding:5% 10%;
+	width:100%;
+	outline:none;
+	border:1px solid #bbb;
+	display:inline-block;
+
+}
+
+form input , form textarea {
+	margin:2% 0;
+	padding:5% 10%;
+	width:100%;
+	outline:none;
+	border:1px solid #bbb;
+	border-radius:20px;
+	display:inline-block;
+}
+
+form input[type=text]:focus,
+form input[type="password"]:focus {
+	border-color:cornflowerblue;
+}
+
+form input[type="date"] {
+
+    color: #95a5a6;
+    font-family: "Helvetica", arial, sans-serif;
+    font-size: 14px;
+    border:1px solid #ecf0f1;
+    text-align: "center";
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+
+input[type=submit] {
+  /*width:100%;
+	padding:15px 50px;
+	background:#17334b;*/
+	border:none;
+	color:white;
+	cursor:pointer;
+	display:inline-block;
+	float:right;
+	clear:right;
+}
+
+input[type=submit]:hover {
+	opacity:0.8;
+
+}
+
+input[type="submit"]:active {
+	opacity:0.4;
+}

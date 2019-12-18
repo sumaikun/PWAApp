@@ -1,0 +1,55 @@
+.risk-level {
+  counter-reset: step-counter;
+  margin: 0;
+  padding: 0;
+}
+.risk-level > li {
+  display: inline-block;
+  overflow: hidden;
+  width: 8px;
+  height: 8px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 50px;
+  vertical-align: middle;
+}
+.risk-level > li::before {
+  content: counter(step-counter);
+  counter-increment: step-counter;
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 4px;
+}
+.risk-level > li.isActive {
+  width: 15px;
+  height: 15px;
+  line-height: 75px;
+}
+.risk-level > li.isActive::before {
+  color: white;
+  font-size: 14px;
+}
+.risk-level > li:nth-child(1) {
+  background: #009642;
+}
+.risk-level > li:nth-child(2) {
+  background: #5f9600;
+}
+.risk-level > li:nth-child(3) {
+  background: #afc611;
+}
+.risk-level > li:nth-child(4) {
+  background: #f4db0a;
+}
+.risk-level > li:nth-child(5) {
+  background: #f4af0a;
+}
+.risk-level > li:nth-child(6) {
+  background: #e74404;
+}
+.risk-level > li:nth-child(7) {
+  background: #b20811;
+}
