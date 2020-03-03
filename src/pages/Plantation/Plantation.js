@@ -139,7 +139,11 @@ class Plantation extends Component {
                             <div
                               onClick={ () => {
                                  
-                                this.props.setPlantationReport(null);                                
+                                this.props.setPlantationReport(null);
+                                
+                                this.props.getDefaultActivitiesByType(pProject.id);
+
+                                this.props.selectPlantationProject( pProject );
 
                                 if(currentPhase == 5)
                                 {

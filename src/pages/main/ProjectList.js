@@ -70,7 +70,6 @@ class ProjectList extends Component {
     this.registerUnit = this.registerUnit.bind(this);
     this.editFunctionalUnit = this.editFunctionalUnit.bind(this);
     this.renderFunctionalList = this.renderFunctionalList.bind(this);
-    this.validateFuncionalUnit = this.validateFuncionalUnit.bind(this);
     this.state = {
       editMode:false,
       idToModify:null,
@@ -85,57 +84,14 @@ class ProjectList extends Component {
   }
 
   componenDidMount(){
-
-  }
-
-  validateFuncionalUnit(project_id){
-    //Crear unidad funcional
-    let found = false;
-
-    this.props.memory.offLineFunctionalUnits.forEach(offline => {
-      if( offline.project_id === project_id &&  offline.code.toLowerCase()  === this.Code.value.toLowerCase() )
-      {
-        found = true;
-      }
-    })
-
-    if(found == true){
-        Ons.notification.alert({title:"¡Espera!",message:"Ya esta esta unidad funcional guardada en memoria"});
-        return found;
-    }
-
-    //Verificar si el dato si existe en datos del servidor
-
-    let found2 = false;
-
-    this.props.appState.functionalUnits.forEach(data => {
-      if( data.project_id === project_id &&  data.code.toLowerCase()  === this.Code.value.toLowerCase() )
-      {
-        found2 = true;
-      }
-    })
-
-    if(found2 == true){
-        Ons.notification.alert({title:"¡Espera!",message:"Ya esta esta unidad funcional en el servidor"});
-        return found2;
-    }
-
-
-    return false;
-
-  }
+  
+  }  
 
   registerUnit(e){
 
     e.preventDefault();
 
-    console.log(this.validateFuncionalUnit(this.project_id));
-
-    if(!this.validateFuncionalUnit(this.project_id) == false)
-    {
-      console.log("is false");
-      return;
-    }
+    
 
     if(!this.props.appState.isFetching)
     {
@@ -161,17 +117,6 @@ class ProjectList extends Component {
 
         if(this.state.editMode == true)
         {
-
-          //console.log(this.state);
-          //return ;
-
-          /*if(this.validateFuncionalUnit(this.state.projectIdToModify) == false )
-          {
-            console.log("false on edit");
-            return;
-          }*/
-
-
           if(!this.state.isOfflineFunit)
           {
               validation ?  this.props.updateFunctionalUnit(this.state.idToModify,{
@@ -179,16 +124,6 @@ class ProjectList extends Component {
                 type: 1,
                 project_id: this.state.projectIdToModify
               },componentSuccess) : false;
-
-          }else{
-            validation ?  this.props.updateOfflineFunctionalUnit({
-              code: this.Code.value,
-              type: 1,
-              project_id: this.state.projectIdToModify,
-              ToSynchro:true,
-              id:this.state.idToModify
-            }) : false;
-            componentSuccess(null);
           }
 
           this.Code.value = "";
@@ -234,8 +169,7 @@ class ProjectList extends Component {
           self.setState({
             editMode:true,
             idToModify: unit.id,
-            projectIdToModify: unit.project_id,
-            isOfflineFunit: unit.ToSynchro
+            projectIdToModify: unit.project_id
           });
 
         }
@@ -284,9 +218,7 @@ class ProjectList extends Component {
                       this.props.setFunctionalUnit(funit);
 
                       //persist if this data change
-                      this.props.getForestalUnits(funit.id,null,null,false,()=>{                       
-                        console.log("Save if changed");
-                      });
+                      this.props.getForestalUnits(funit.id);
 
                       this.props.goToForestalUnits();
 

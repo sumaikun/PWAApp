@@ -206,32 +206,13 @@ class FormProcess extends Component {
         ////console.log(this.state.formData.id);
         let data = this.state.formData;
         data.user_id = this.props.appState.user.id;
-
-        if(this.props.appState.currentFunctionalUnit.ToSynchro)
-        {
-          data.updated_at = new Date().toISOString().split('T')[0];
-          Ons.notification.alert({title:"",message:"Esta registrando datos a una Unidad fuctional no sincronizada se guardara en memoria hasta la sincronización"});
-          this.props.updateOfflineForestUnitP2(data);
-          this.props.goBack();
-          return;
-        }
-
+     
         //return;
         this.props.updateForestUnitPhase2(this.state.formData.id,data);
       }else{
         let data = this.state.formData;
         data.functional_unit_id = this.props.appState.currentFunctionalUnit.id;
-        data.user_id = this.props.appState.user.id;
-
-        if(this.props.appState.currentFunctionalUnit.ToSynchro)
-        {
-          data.updated_at = new Date().toISOString().split('T')[0];
-          Ons.notification.alert({title:"",message:"Esta registrando datos a una Unidad fucional no sincronizada se guardara en memoria hasta la sincronización"});
-          this.props.addOfflineForestUnitP2(data);
-          this.props.goBack();
-          return;
-        }
-
+        data.user_id = this.props.appState.user.id;       
 
         this.props.createForestUnitPhase2(data);
         ////console.log("createMode");

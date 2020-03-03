@@ -17,7 +17,6 @@ export * from "./RiskManagement/RiskOverview"
 //  Plantation
 export * from "./Plantation/PlantationActions";
 export * from "./Activity/ActivityActions";
-
 export * from "./Plantation/CivilActions";
 
 //memoryActions
@@ -26,5 +25,9 @@ export * from "./sst/"
 export * from "./visitor/"
 export * from "./user/"
 export * from './ResourceMain'
+
 //memoryActions
 export * from "./memoryActions";
+
+// expensesActions
+export * from "./expenses/expensesActions";

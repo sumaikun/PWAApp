@@ -30,8 +30,7 @@ import {
   goToRiskManagement,
   goToInventoryManagement,
   goToPlantation,
-  goToCivi,
-  goToCivilManagement,
+  goToExpensesSelection
   } from '../../flux/actions';
 import { connect } from 'react-redux';
 
@@ -46,11 +45,13 @@ class ProjectManagement extends Component {
 
   componentDidMount(){
     //this.props.fetchProjects();
+   
   }
 
-  contentPage(phase1Projects, phase2Projects, phase3Projects, phase4Projects, phase5Projects, phase6Projects){
+  contentPage(phase1Projects, phase2Projects, phase3Projects, phase4Projects, phase5Projects, phase6Projects, user){
+    
     return (
-      <div style={{height:"100%",backgroundColor:"white"}}>
+      <div style={{height:"120%",backgroundColor:"white"}}>
         <br/>
 
         {
@@ -157,23 +158,43 @@ class ProjectManagement extends Component {
         {
 
         phase6Projects.length > 0   ?
-        
-        <div onClick={()=>{
-          this.props.setProjectPhase(6);
-          this.props.goToPlantation();
-          console.log("Clicked on civil like plantation");
-        }}>
-          <CardButton
-            imgIcon = {civil}
-            title="Civíl"
-            subtitle={"Total proyectos: " + phase6Projects.length}
-            infoContainer={"Ultima actualizacion: " + phase6Projects[ phase6Projects.length - 1 ].created_at }
-            />
-        </div>:null
+          <div>
+            <div onClick={()=>{
+              this.props.setProjectPhase(6);
+              this.props.goToPlantation();
+              console.log("Clicked on civil like plantation");
+            }}>
+              <CardButton
+                imgIcon = {civil}
+                title="Civíl"
+                subtitle={"Total proyectos: " + phase6Projects.length}
+                infoContainer={"Ultima actualizacion: " + phase6Projects[ phase6Projects.length - 1 ].created_at }
+                />
+            </div>
+            <div style={{height: "10px"}}></div>
+          </div>:null
 
         }
 
-      <div style={{height:"10px"}} ></div>
+
+        {
+
+        user && user.position_id == 2 ?
+
+          <div onClick={()=>{
+            this.props.goToExpensesSelection()
+          }}>
+            <CardButton
+              imgIcon = { chart }
+              title="Modulo Gastos"
+              subtitle={"Total proyectos: " }
+              infoContainer={"Ultima actualizacion: "  }
+              />
+          </div>:null
+
+        }
+
+     
 
         {/*<div onClick={()=>{
           this.props.goToInventoryManagement();
@@ -198,7 +219,6 @@ class ProjectManagement extends Component {
             />
         </div>*/}
 
-        <div style={{height:"10px"}} ></div>
 
 
       </div>
@@ -235,7 +255,7 @@ class ProjectManagement extends Component {
     });
 
 
-    const { isFetching } = this.props.appState;
+    const { isFetching , user } = this.props.appState;
 
     return (
       <AppPage  title={["GESTION DE ", <strong>PROYECTOS</strong>]}>
@@ -245,7 +265,7 @@ class ProjectManagement extends Component {
               <Loading/>
             </div>
             :
-             this.contentPage(phase1Projects, phase2Projects, phase3Projects, phase4Projects, plantationProjects, civilProjects)
+             this.contentPage(phase1Projects, phase2Projects, phase3Projects, phase4Projects, plantationProjects, civilProjects, user)
 
           }
 
@@ -267,4 +287,5 @@ export default  connect(mapStateToProps,
     setProjectPhase,
     goToRiskManagement,
     goToInventoryManagement,
-    goToPlantation })(ProjectManagement);
+    goToPlantation,
+    goToExpensesSelection })(ProjectManagement);

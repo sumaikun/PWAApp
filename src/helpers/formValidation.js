@@ -57,5 +57,5 @@ export const Validation_405 = () => {
 }
 
 export const DefaultError = (message = null) => {
-    //!message ? Ons.notification.alert({title:'¡Tenemos un problema!',message:"Ha sucedido un error"}) : Ons.notification.alert({title:'¡Tenemos un problema!',message});
+    !message ? Ons.notification.alert({title:'¡Tenemos un problema!',message:"Ha sucedido un error"}) : Ons.notification.alert({title:'¡Tenemos un problema!',message});
 }

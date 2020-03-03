@@ -1,15 +1,43 @@
-import { FETCH, CANCEL_FETCH, MENU_OPEN, MENU_CLOSE, SETUSER, SET_PROJECTS,
-SET_PROJECT_PHASE, SET_FUNCTIONAL_UNITS, RESET_FUNCTIONAL_UNITS,RESET_FORESTAL_UNITS, SET_FORESTAL_UNITS,
-SET_FORESTAL_UNIT , SET_FUNCTIONAL_UNIT , SELECT_PROJECT, SET_RISK_OVERVIEW, SET_INVENTORY,
-SET_FUEL,SET_SST,SET_SST_ASSISTANTS,SET_SST_VISITORS,SET_SST_DATA,SET_VISITOR_DATA, SET_LIST_USER,
-SET_PLANTATION_REPORT_TYPE,
-  SET_ACTIVITIES,
+import { FETCH, CANCEL_FETCH,
+  MENU_OPEN,
+  MENU_CLOSE,
+  SETUSER,
+  SET_PROJECTS,
+  SET_PROJECT_PHASE,
+  SET_FUNCTIONAL_UNITS,
+  RESET_FUNCTIONAL_UNITS,
+  RESET_FORESTAL_UNITS,
+  SET_FORESTAL_UNITS,
+  SET_FORESTAL_UNIT,
+  SET_FUNCTIONAL_UNIT,
+  SELECT_PROJECT,
+  SET_RISK_OVERVIEW,
+  SET_INVENTORY,
+  SET_FUEL,
+  SET_SST,
+  SET_SST_ASSISTANTS,
+  SET_SST_VISITORS,
+  SET_SST_DATA,
+  SET_VISITOR_DATA,
+  SET_LIST_USER,
+  SET_PLANTATION_REPORT_TYPE,
   SET_PLANTATION_REPORTS,
   SET_PLANTATION_REPORT,
   SELECT_PLANTATION_PROJECT,
   PROJECT_DATA,
+  ADD_FUNCTIONAL_UNIT,
   SET_DEFAULT_ACTIVITIES,
-  SET_VISITOR_ASSISTANTS_DATA} from "../types";
+  SET_VISITOR_ASSISTANTS_DATA,
+  ADD_FORESTAL_UNIT,
+  ADD_PLANTATION_REPORT,
+  SET_REQUIRE_EXPENSES,
+  SET_CURRENT_REQUIRE_EXPENSE,
+  SET_BOX_EXPENSES,
+  SET_CURRENT_BOX_EXPENSE,
+  ADD_REQUIRE_EXPENSE,
+  ADD_BOX_EXPENSE,
+  SET_EXPENSE_TYPE
+} from "../types";
 
 export const openMenu = () => ({
   type: MENU_OPEN
@@ -155,5 +183,61 @@ export const setDataSST = (data) => ({
 
 export const setGoToResourceMain = (data) => ({
   type: PROJECT_DATA,
+  payload: data
+})
+
+
+// news functions for index db 
+
+export const addFunctionalUnit = (data) => ({
+  type: ADD_FUNCTIONAL_UNIT,
+  payload: data
+})
+
+
+export const addForestalUnit = (data) => ({
+  type: ADD_FORESTAL_UNIT,
+  payload: data
+})
+
+export const addPlantationReport = (data) => ({
+  type: ADD_PLANTATION_REPORT,
+  payload: data
+})
+
+// expenses
+
+export const setRequireExpenses = (data) => ({
+  type: SET_REQUIRE_EXPENSES,
+  payload: data
+})
+
+export const setCurrentRequireExpense = (data) => ({
+  type: SET_CURRENT_REQUIRE_EXPENSE,
+  payload: data
+})
+
+export const setBoxExpenses = (data) => ({
+  type: SET_BOX_EXPENSES,
+  payload: data
+})
+
+export const setCurrentBoxExpense = (data) => ({
+  type: SET_CURRENT_BOX_EXPENSE,
+  payload: data
+})
+
+export const addRequireExpense = (data) => ({
+  type: ADD_REQUIRE_EXPENSE,
+  payload: data
+})
+
+export const addBoxExpense = (data) => ({
+  type: ADD_BOX_EXPENSE,
+  payload: data
+})
+
+export const setExpenseType = (data) => ({
+  type: SET_EXPENSE_TYPE,
   payload: data
 })

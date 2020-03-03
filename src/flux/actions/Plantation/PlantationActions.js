@@ -1,13 +1,33 @@
 import { Request } from '../../../helpers/request';
-import { fetching , notFetching, setPlantationReports, setPlantationReport } from "../appActions";
-import { GET_PLANTATION_REPORTS, GET_PLANTATION_REPORTS_BY_PROJECT, GET_PLANTATION_REPORT_BY_ID, CREATE_PLANTATION_REPORT, UPDATE_PLANTATION_REPORT, BASE_URL } from "../../types";
+import { fetching,
+   notFetching,
+   setPlantationReports,
+   setPlantationReport,
+   addPlantationReport } from "../appActions";
+import { GET_PLANTATION_REPORTS,
+  GET_PLANTATION_REPORTS_BY_PROJECT,
+  GET_PLANTATION_REPORT_BY_ID,
+  CREATE_PLANTATION_REPORT,
+  UPDATE_PLANTATION_REPORT } from "../../types";
+import { storeData , verifyAndSaveInArray } from '../../../helpers/indexDbModels'
 import Ons from 'onsenui';
-import {
-  addOfflinePlantationReport,
-  updateServerPlantationReport,
-  updateOfflinePlantationReport
-} from "../memoryActions";
 import {goBack} from "../navigationActions";
+
+async function ManageOffline (dispatch,data){
+  
+  if(data.id == null)
+  {
+    let r = Math.random().toString(36).substring(7);
+    console.log("random", r);    
+    data.id = r;
+  }
+  
+  data.synchroState = false;
+  console.log(data);
+  await storeData("dailyReports",data);
+  dispatch(addPlantationReport(data));
+  
+}
 
 export const getPlantationReports = (keepFetching = false ) => {  
 
@@ -45,29 +65,82 @@ export const getPlantationReports = (keepFetching = false ) => {
   };
 };
 
-export const getPlantationReportsByProject = (project_id, keepFetching = false) => {    
+export const getPlantationReportsByProject = (project_id) => {    
 
   return async dispatch => {
 
+    dispatch( fetching() );
+
     if(!navigator.onLine)
     {
+
+      console.log("Modo offline");
+
+      let req = indexedDB.open("plantar");  
+        
+          req.onsuccess = async function (evt) {
+
+              let filteredPlantationReports = [];
+              const db = this.result;
+              let tx = db.transaction(["dailyReports"], 'readonly');
+              let store = tx.objectStore("dailyReports");
+              let index = store.index("project_id");              
+              let singleKeyRange = IDBKeyRange.only(project_id);
+              let req = index.openCursor(singleKeyRange);
+
+              await new Promise( (resolve) =>{
+
+                req.onsuccess = function(event) {
+                
+                  let cursor = event.target.result;
+                  if (cursor) {
+                      // Do something with the matches.                      
+                    let data = cursor.value;
+                    data.civil_image_1 = "";
+                    data.civil_image_2 = "";
+                    data.civil_image_3 = "";
+                    filteredPlantationReports.push(data);                                         
+                    cursor.continue();
+                  } 
+                  else{
+                        
+                    dispatch(setPlantationReports(filteredPlantationReports));
+      
+                    dispatch(notFetching());
+    
+                    resolve("done");
+                      
+                  }                      
+      
+                }
+    
+              });          
+                
+              return;
+          }
+
+          req.onerror = (error) =>{
+            dispatch(notFetching());
+            return;
+          }
+
       return;
+
     }
     
-    if(!keepFetching)
-    {
-      dispatch( fetching() );
-    }
+  
 
-    let SuccessCallBack = (response) => {
-      
-      if(!keepFetching)
-      {
-        dispatch(notFetching());
-      }
-      
+    let SuccessCallBack = async (response) => {     
       
       dispatch(setPlantationReports(response.data));
+
+      if(response.data.length > 0)
+      {
+        await verifyAndSaveInArray(response.data,"dailyReports");
+      }
+
+      dispatch(notFetching());
+
     };
 
     let ErrorCallBack = () => {
@@ -120,10 +193,9 @@ export const createReport = (data, successCallBack = null, errorCallBack = null)
 
     if(!navigator.onLine)
     {
-      console.log("Modo offline");
-      dispatch(addOfflinePlantationReport(data));
+      console.log("Modo offline");     
+      ManageOffline(dispatch,data);
       Ons.notification.alert({title:"¡Que bien!",message:"¡Reporte de plantación creado offline!"});
-      dispatch(goBack());
       return;
     }
 
@@ -154,29 +226,12 @@ export const updateReport = (plantation_report_id, data, successCallBack = null,
   return async dispatch => {
 
     if(!navigator.onLine || data.ToSynchro)
-      {
-        console.log("Modo offline");
-        
-        data.id = plantation_report_id;
-        
-        console.log(data.ToSynchro);
-
-        if(data.ToSynchro)
-        {
-          console.log("editar offline");
-          dispatch(updateOfflinePlantationReport(data));
-          dispatch(goBack());          
-        }
-        else
-        {
-          console.log("editar del servidor");
-          dispatch(updateServerPlantationReport(data));
-          dispatch(goBack());
-        }
-
-        Ons.notification.alert({title:"¡Que bien!",message:"¡Reporte de plantación editado en memoria!"});
-        return;
-      }
+    {
+      console.log("Modo offline");      
+      ManageOffline(dispatch,data);
+      Ons.notification.alert({title:"¡Que bien!",message:"¡Reporte de plantación editado en memoria!"});
+      return;
+    }
 
 
 

@@ -14,15 +14,15 @@ export const saveImage = (key,self) => {
     if (window.cordova) {
 
       let base64Type = {
-        quality : 30,
+        quality : 11,
         correctOrientation : true,
         destinationType : navigator.camera.DestinationType.FILE_URI,
         sourceType : navigator.camera.PictureSourceType.CAMERA,
-        
+        saveToPhotoAlbum: true
       }
   
       let fileType = {
-        quality : 30,
+        quality : 11,
         correctOrientation : true,
         destinationType: navigator.camera.DestinationType.FILE_URI,
         mediaType: navigator.camera.MediaType.PICTURE,
@@ -34,10 +34,10 @@ export const saveImage = (key,self) => {
 
       console.log(window.device.version);
 
-      if (window.device.platform.toLowerCase() == 'android' && parseInt( window.device.version, 10 ) < 8){
+      //if (window.device.platform.toLowerCase() == 'android' && parseInt( window.device.version, 10 ) < 8){
         
         window.cordova.plugins.backgroundMode.enable();
-      }
+      //}
 
       navigator.camera.getPicture(image => {
 

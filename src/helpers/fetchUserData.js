@@ -11,13 +11,19 @@ export const fetchUserData = async (userid) => {
     const GET_FORESTAL_UNITS_URL = BASE_URL+'/api/functional-unit/forest-units/';
     //Get user projects
 
+    const GET_DEFAULT_ACTIVITIES_BY_TYPE = BASE_URL+"/api/default-activity/";
+
+    const GET_DAILY_REPORTS_BY_PROJECT = BASE_URL+"/api/daily-report/project/";
+    //Plantation and civil
+
+
     let projects = await fetch(GET_PROJECTS_BY_USER+userid)
                                     .then(response => response.json());
                                 
     console.log(projects);
 
       //here the project must be save on indexed db on a asynchronous way
-      storeArray("projects",projects);
+    storeArray("projects",projects);
       //---------------------------------------------------------------------
 
     return Promise.all(
@@ -29,7 +35,9 @@ export const fetchUserData = async (userid) => {
                 //here fetch functional units for forestal projects in background 
 
                 let functionalUnits = await fetch(GET_FUNCTIONAL_UNITS+project.id)
-                            .then(response => response.json());
+                            .then(response => {
+                                return response.status === 200 ? response.json() : [];
+                            });
 
                 console.log("functional units");
                 console.log(functionalUnits);
@@ -39,7 +47,9 @@ export const fetchUserData = async (userid) => {
 
                     functionalUnits.map(async functional =>{
                         let forestalUnits = await fetch(GET_FORESTAL_UNITS_URL +functional.id)
-                                .then(response => response.json());
+                        .then(response => {
+                            return response.status === 200 ? response.json() : [];
+                        });
                         
                         console.log("forestal units");
                         console.log(forestalUnits);
@@ -47,6 +57,30 @@ export const fetchUserData = async (userid) => {
                         storeArray("forestalUnits",forestalUnits);
                     }));
                
+            }else{
+                if( project.phase == 5 || project.phase == 6 )
+                {
+                    let dailyReports = await fetch(GET_DAILY_REPORTS_BY_PROJECT+project.id)
+                    .then(response => {
+                        return response.status === 200 ? response.json() : [];
+                    });
+                    console.log("dailyReports",dailyReports);
+
+                    storeArray("dailyReports",dailyReports);
+
+                    let defaultActivities = await fetch(GET_DEFAULT_ACTIVITIES_BY_TYPE+project.id)
+                    .then(response => {
+                        return response.status === 200 ? response.json() : [];
+                    });
+                    console.log("defaultActivities",defaultActivities);
+
+                    defaultActivities.forEach( (data) => {
+                        data.project = project.id;
+                    });
+
+                    storeArray("defaultActivities",defaultActivities);
+
+                }
             }
 
     }));     

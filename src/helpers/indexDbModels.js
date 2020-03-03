@@ -1,5 +1,5 @@
 const DB_NAME = 'plantar';
-const DB_VERSION = 7; 
+const DB_VERSION = 11; 
 
 export function generateDb() {    
      console.log("openDb ...");
@@ -27,7 +27,9 @@ export function generateDb() {
           db.deleteObjectStore('projects');
           db.deleteObjectStore('functionalUnits');
           db.deleteObjectStore('forestalUnits');
-          db.deleteObjectStore('users');  
+          db.deleteObjectStore('users');
+          db.deleteObjectStore('dailyReports');
+          db.deleteObjectStore('defaultActivities');  
         }
         catch(e) {
          
@@ -118,6 +120,55 @@ export function generateDb() {
            store.createIndex('name', 'name', { unique: false });
            store.createIndex('phone', 'phone', { unique: false });
            store.createIndex('synchroState', 'synchroState', { unique: false });
+
+
+           //plantation and civil
+
+           store = db.createObjectStore(
+            "dailyReports", { keyPath: 'id' });
+            
+           store.createIndex('responsible', 'responsible', { unique: false });
+           store.createIndex('field_assistant', 'field_assistant', { unique: false });
+           store.createIndex('location', 'location', { unique: false });
+           store.createIndex('report_date', 'report_date', { unique: false });
+           store.createIndex('people_number', 'people_number', { unique: false });
+           store.createIndex('type', 'type', { unique: false });
+           store.createIndex('officials', 'officials', { unique: false });
+           store.createIndex('assistants', 'assistants', { unique: false });
+           store.createIndex('notes', 'notes', { unique: false });
+           store.createIndex('civil_image_1', 'civil_image_1', { unique: false });
+           store.createIndex('civil_image_2', 'civil_image_2', { unique: false });
+           store.createIndex('civil_image_3', 'civil_image_3', { unique: false });
+           store.createIndex('project_id', 'project_id', { unique: false });
+           store.createIndex('created_at', 'created_at', { unique: false });
+           store.createIndex('updated_at', 'updated_at', { unique: false });
+           store.createIndex('report_activities', 'report_activities', { unique: false });
+           store.createIndex('required_staffs', 'required_staffs', { unique: false });
+           store.createIndex('required_tools', 'required_tools', { unique: false });
+           store.createIndex('civil', 'civil', { unique: false });
+           store.createIndex('synchroState', 'synchroState', { unique: false });
+
+           store = db.createObjectStore(
+            "defaultActivities", { keyPath: 'id' });
+            
+           store.createIndex('name', 'name', { unique: false });
+           store.createIndex('measuring_unit', 'measuring_unit', { unique: false });
+           store.createIndex('activity_type_id', 'activity_type_id', { unique: false });
+           store.createIndex('created_at', 'created_at', { unique: false });
+           store.createIndex('updated_at', 'updated_at', { unique: false });
+           store.createIndex('synchroState', 'synchroState', { unique: false });
+
+
+           store = db.createObjectStore(
+            "expenses", { keyPath: 'id' });
+            
+           store.createIndex('synchroState', 'synchroState', { unique: false });
+
+           store = db.createObjectStore(
+            "boxExpenses", { keyPath: 'id' });
+            
+           store.createIndex('synchroState', 'synchroState', { unique: false });
+
     };
 }
 
@@ -414,3 +465,71 @@ export const deleteFromDb = (storeName, elementId) =>{
 
 
 }
+
+export const verifyAndSaveInArray = (array,storeName) =>{
+
+    let req = indexedDB.open(DB_NAME);
+
+    return new Promise((resolve, reject) => {
+
+        req.onsuccess = function (evt) {
+      
+            const db = this.result;
+            console.log("openDb DONE");
+      
+            let tx = db.transaction(storeName, 'readwrite');
+            let store = tx.objectStore(storeName);
+
+            let i = 0;
+
+            array.forEach(data => {
+                
+                let proc = store.get(data["id"]);
+
+                            
+
+                proc.onsuccess = (evt) =>{
+                    
+                    //console.log("get success",evt.target.result);
+                    i++;
+
+                    if(evt.target.result == null)
+                    {
+                        store.add(data);
+                    }
+
+                    //console.log("equal",i,array.length);
+
+                    //console.log(i,array.length);
+                    
+                    if (i === array.length) {
+                        db.close();
+                        resolve(evt.target.result);
+                    }
+                    
+                }
+                proc.onerror = (evt) =>{
+                    //console.log("error in get");
+                    i++;
+                    
+                    if (i === array.length) {
+                        db.close();
+                        reject(this.error);
+                    }
+                    
+                }
+
+                
+            });
+            
+        }
+        
+        req.onerror = function (evt){
+            console.log("error opening db");         
+            reject(this.error);
+        }
+    
+    
+    });
+
+} 

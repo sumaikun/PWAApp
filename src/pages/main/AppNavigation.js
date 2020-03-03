@@ -18,7 +18,7 @@ import CollapseMenu from "../../components/CollapseMenu";
 // REDUX
 import { connect } from 'react-redux';
 import { insertNavigator , closeMenu  } from '../../flux/actions';
-import { setProjects , setUser, setFunctionalUnits, setForestalUnits } from '../../flux/actions';
+import { setProjects , setUser, setFunctionalUnits, setForestalUnits, fetching, notFetching } from '../../flux/actions';
 
 //indexdb
 import { generateDb , getAllFromStore , deleteDb } from '../../helpers/indexDbModels';
@@ -58,19 +58,23 @@ class AppNavigation extends Component {
 
     let generateData = async () =>
     {
+      this.props.fetching(); 
       const users = await getAllFromStore("users");
       if(users.length > 0)
       {
         this.props.setUser(users[0]);
         const projects = await getAllFromStore("projects");
         this.props.setProjects(projects);
-        const functionalUnits = await getAllFromStore("functionalUnits");
+        this.props.notFetching();
+        //const functionalUnits = await getAllFromStore("functionalUnits");
         //console.log(functionalUnits);
-        this.props.setFunctionalUnits(functionalUnits);
-        const forestallUnits = await getAllFromStore("forestalUnits");
+        //this.props.setFunctionalUnits(functionalUnits);
+        //const forestallUnits = await getAllFromStore("forestalUnits");
         //console.log(forestallUnits);
-        this.props.setForestalUnits(forestallUnits);
-        this.userLogged = true;      
+        //this.props.setForestalUnits(forestallUnits);              
+      }
+      else{
+        this.props.notFetching();
       }
     }
 
@@ -142,4 +146,4 @@ const mapStateToProps = state => {
 }
 
 export default  connect(mapStateToProps, { insertNavigator , closeMenu,
-  setProjects , setUser, setFunctionalUnits, setForestalUnits })(AppNavigation);
+  setProjects , setUser, setFunctionalUnits, setForestalUnits, fetching, notFetching })(AppNavigation);

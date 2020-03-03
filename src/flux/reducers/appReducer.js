@@ -7,6 +7,10 @@ import { FETCH,
    SET_PROJECT_PHASE,
    SET_FUNCTIONAL_UNITS,
    RESET_FUNCTIONAL_UNITS,
+
+   ADD_FUNCTIONAL_UNIT,
+   CHANGE_FUNCTIONAL_UNIT,
+
    RESET_FORESTAL_UNITS,
    SET_FORESTAL_UNITS,
    SET_FORESTAL_UNIT,
@@ -40,7 +44,16 @@ import { FETCH,
    SET_DEFAULT_ACTIVITIES,
    PROJECT_DATA,
    SET_VISITOR_ASSISTANTS_DATA,
-   SET_NS_APP_STATE   } from "../types";
+   SET_NS_APP_STATE,   
+   ADD_FORESTAL_UNIT,
+   ADD_PLANTATION_REPORT,
+   SET_REQUIRE_EXPENSES,
+   SET_CURRENT_REQUIRE_EXPENSE,
+   SET_BOX_EXPENSES,
+   SET_CURRENT_BOX_EXPENSE,
+   ADD_REQUIRE_EXPENSE,
+   ADD_BOX_EXPENSE,
+   SET_EXPENSE_TYPE } from "../types";
 
 let initialUser = null;
 
@@ -140,28 +153,23 @@ let defaultValues = {
   listMaintenanceReport: initialListMaintenanceReport,
   establishmentReport: initialEstablishmentReport,
   maintenanceReport: initialMaintenanceReport,
-}
-/*
-try
-{
- storedData = JSON.parse(localStorage.getItem('state'));
- console.log("intento tomar los valores de local storage");
- if(!storedData.appState)
- {
-   console.log("los valores no existen en el local storage");
-   storedData.appState = defaultValues;
- }
- console.log(storedData);
-}
-catch(err){
-  console.log("error initializaing app reducer");
-}*/
 
-//console.log(storedData);
+  // Expenses
 
-//const initialState =  storedData ? storedData.appState : defaultValues;
+  requireExpenses:[],
+  boxExpenses:[],
+  currentRequireExpense:null,
+  currentBoxExpense:null,
+  expenseType:null
+
+}
+
 
 const initialState = defaultValues;
+
+let index;
+
+let data;
 
 const appReducer = (state = initialState, action) => {
   switch(action.type) {
@@ -192,6 +200,7 @@ const appReducer = (state = initialState, action) => {
       let result ;
 
       action.payload.forEach(load => {
+        
         result = true;
         functionalArray.forEach(data => {
             if(load.id == data.id)
@@ -199,10 +208,12 @@ const appReducer = (state = initialState, action) => {
               result = false;
             }
         });
+
         if(result)
         {
           functionalArray.push(load);
         }
+
       });
 
       state={
@@ -217,45 +228,35 @@ const appReducer = (state = initialState, action) => {
         functionalUnits:[]
       }
     return state;
+    
+
+    case ADD_FUNCTIONAL_UNIT:
+
+      index = state.functionalUnits.findIndex(data => data.id == action.payload.id);
+      
+      index != -1 ?   state.functionalUnits[index] = action.payload  : state.functionalUnits.push(action.payload);
+
+    return state;
+
+    
+
     case RESET_FORESTAL_UNITS:
       state={
         ...state,
         forestalUnits:[]
       }
     return state;
-    case SET_FORESTAL_UNITS:
 
-      if(action.payload.length > 0)
-      {
-        ////console.log(action.payload);
+    case SET_FORESTAL_UNITS:     
         
-        action.payload.forEach( payload =>{
-
-          let fid = payload.functional_unit_id;
-
-          let previousData = state.forestalUnits[fid] ? state.forestalUnits[fid]:[];
-
-          let index = previousData.findIndex(data => data.id == payload.id);
-
-          //console.log("index",index,payload.id);
-
-          index != -1 ? previousData[index] = payload  : previousData.push(payload);          
-
-            state={
-              ...state,
-              forestalUnits:{
-                ...state.forestalUnits,
-                [fid]: previousData
-              }
-            }
-
-        });      
-        
-        ////console.log(state);
+      state={
+          ...state,
+          forestalUnits:action.payload
       }
 
+      return state;
 
-    return state;
+
     case SET_FORESTAL_UNIT:
       state={
         ...state,
@@ -263,6 +264,23 @@ const appReducer = (state = initialState, action) => {
       }
       ////console.log(state);
     return state;
+    
+    case ADD_FORESTAL_UNIT:
+
+      index = state.forestalUnits.findIndex(data => data.id == action.payload.id);
+      
+      index != -1 ?   state.forestalUnits[index] = action.payload  : state.forestalUnits.push(action.payload);
+
+    return state;
+
+    case ADD_PLANTATION_REPORT:
+
+      index = state.plantationReports.findIndex(data => data.id == action.payload.id);
+      
+      index != -1 ?   state.plantationReports[index] = action.payload  : state.plantationReports.push(action.payload);
+
+    return state;
+
     case FETCH:
       state={
         ...state,
@@ -536,7 +554,7 @@ const appReducer = (state = initialState, action) => {
     
     case SET_DEFAULT_ACTIVITIES:
 
-        if(action.payload.default.length > 0)
+        if(action.payload.default.length >= 0)
         {
            console.log("default activities");
            console.log(action.payload);
@@ -578,6 +596,77 @@ const appReducer = (state = initialState, action) => {
       };
       console.log(state);
       return state;
+
+    case SET_REQUIRE_EXPENSES:
+
+      state = {
+        ...state,
+        requireExpenses: action.payload
+      }
+
+      return state
+
+    case SET_CURRENT_REQUIRE_EXPENSE:
+
+      state = {
+        ...state,
+        currentRequireExpense: action.payload
+      }
+
+      return state
+    
+    case SET_BOX_EXPENSES:
+
+      state = {
+        ...state,
+        boxExpenses: action.payload
+      }
+
+      return state
+
+    case SET_CURRENT_BOX_EXPENSE:
+
+      state = {
+        ...state,
+        currentBoxExpense: action.payload
+      }
+
+      return state
+
+    case ADD_REQUIRE_EXPENSE:
+
+      data = state.requireExpenses;
+
+      data[action.payload.id] == null ?  data.push(action.payload) : data[action.payload.id] = action.payload ; 
+
+      state = {
+        ...state,
+        requireExpenses:data 
+      }
+
+      return state
+
+    case ADD_BOX_EXPENSE:
+
+      data = state.boxExpenses;
+
+      data[action.payload.id] == null ?  data.push(action.payload) : data[action.payload.id] = action.payload ;
+
+      state = {
+        ...state,
+        boxExpenses:data 
+      }
+
+      return state
+
+    case SET_EXPENSE_TYPE:
+
+      state = {
+        ...state,
+        expenseType:action.payload
+      }
+
+      return state
 
     case SET_NS_APP_STATE:
 

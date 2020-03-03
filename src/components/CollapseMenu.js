@@ -9,6 +9,10 @@ import Ons from 'onsenui';
 //helpers
 
 
+//worker
+// eslint-disable-next-line
+import Worker from 'worker-loader!../workers/cleanData.worker.js';
+
 
 // Pages
 
@@ -174,7 +178,23 @@ class CollapseMenu extends Component {
               Procentaje utilizado:<span>{ this.state.memoryUsed + "%" }</span>
               
               Memoria Disponible:<span>{ this.state.memoryAvaliable +"Mib" }</span>
-            </ListItem>           
+            </ListItem>
+            <ListItem   tappable onClick={()=>{
+
+                    let synchroWorker = new Worker();
+
+                    synchroWorker.postMessage("start");
+
+                    synchroWorker.addEventListener('message', async event => {
+                      console.log(event);
+
+                      alert("memoria limpiada");
+                    
+                    });
+
+            }}>
+              <div style={{ width: '14px' }}><Icon icon="fa-leaf" className="fontAwesome" size={12} style={{color:"#193146"}}></Icon></div> <span style={{marginLeft:"15px"}}>Liberar memoria</span>
+            </ListItem>             
           </List>
         </div>
         <BottomToolbar modifier="material" style={{backgroundColor:"#2a6317"}}>

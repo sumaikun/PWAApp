@@ -1,11 +1,15 @@
 import { fetchUserData } from "../helpers/fetchUserData";
-import { storeData , getAllFromStore , clearStorages } from "../helpers/indexDbModels"; 
+import { storeData , getAllFromStore , clearStorages, storeArray } from "../helpers/indexDbModels"; 
 
 // Respond to message from parent thread
 self.addEventListener('message', e => { // eslint-disable-line no-restricted-globals
 
     //console.log(e);
     const BASE_URL = 'https://plantarfuturo.com/ws';
+
+    const EXPENSE_URL = BASE_URL+"/api/expense";
+
+    const BOX_URL = BASE_URL+"/api/bill";
 
     fetch(BASE_URL+"/api/login", { 
         method: 'post',
@@ -41,6 +45,24 @@ self.addEventListener('message', e => { // eslint-disable-line no-restricted-glo
             storeData("users",userData);
             await fetchUserData(userData.id);
 
+            if( userData.position_id  === 2 )
+            {
+                //modulo gastos
+                let requiredExpenses = await fetch(EXPENSE_URL)
+                    .then(response => {
+                        return response.status === 200 ? response.json() : [];
+                });
+
+                storeArray("expenses",requiredExpenses);
+
+                let boxExpenses = await fetch(BOX_URL)
+                    .then(response => {
+                        return response.status === 200 ? response.json() : [];
+                });
+
+                storeArray("boxExpenses",boxExpenses);
+            }
+
             postMessage("success");       
         }
         else{
@@ -48,7 +70,7 @@ self.addEventListener('message', e => { // eslint-disable-line no-restricted-glo
         }
        
     }).catch(function(err) {
-        console.log(err)
+        console.error("error:",err)
         postMessage("error");    
     });
 

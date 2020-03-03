@@ -153,6 +153,7 @@ class Login extends Component {
                       <i className="fas fa-tree"></i>
                     </span>
                   </div>
+                  { isFetching ? <ons-progress-circular indeterminate></ons-progress-circular> : null }                  
                   <br/><br/>
                 </div>
                 <div className="login-form">
@@ -171,6 +172,7 @@ class Login extends Component {
                   </div>
                   <a href="" className="a">Olvidaste tu contraseña?</a>
                 </div>
+                
                 <div style={{display:'flex',justifyContent:'center', marginTop:'25%'}}>
                   <a target={'_blank'} href="https://www.facebook.com/plantarfuturoingenieria/"><img id='logo' className="Social-logo"  src={fbicon} /></a>
                   <a target={'_blank'} href="https://www.instagram.com/plantarfuturo/"><img id='logo' className="Social-logo" src={insicon} /></a>

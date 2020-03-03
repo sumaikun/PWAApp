@@ -1,7 +1,7 @@
 import { Request } from '../../helpers/request'
-import { fetching , notFetching, setForestalUnits, resetForestallUnits } from "./appActions";
+import { fetching , notFetching, setForestalUnits, addForestalUnit } from "./appActions";
 import { GET_FORESTAL_UNITS_URL , BASE_URL } from "../types"
-import { storeData , getAllFromStore } from '../../helpers/indexDbModels'
+import { storeData, verifyAndSaveInArray } from '../../helpers/indexDbModels'
 import Ons from 'onsenui';
 
 
@@ -19,44 +19,91 @@ async function ManageOffline (dispatch,data){
   data.synchroState = false;
   console.log(data);
   await storeData("forestalUnits",data);
-  const dataSet =await getAllFromStore("forestalUnits");
-  console.log(dataSet);
-  dispatch(resetForestallUnits()) 
-  dispatch(setForestalUnits(dataSet));  
-
+  dispatch(addForestalUnit(data));
 }
 
 export const getForestalUnits = (id, successCallBack = null  ,errorCallBack = null ,
-  keepFetching = false , aditionalSuccessLogic = null ) => {
+) => { 
+
   return async dispatch => {
 
-      //console.log(id);
-
-      if(!keepFetching)
-      {
-        dispatch(fetching());
-      }
-
+      dispatch(fetching());
 
       if(!navigator.onLine)
       {
-        console.log("Modo offline");
-        dispatch(notFetching());
-        return;
-      }
+          console.log("Modo offline");
+        
+          //const dataSet = await getAllFromStore("forestalUnits");
+          
+          //console.log(dataSet);
 
-      let SuccessCallBack =  successCallBack ? successCallBack :  (response) => {
-        if(!keepFetching)
-        {
-          dispatch(notFetching());
-        }
+          //console.log(id);
+          
+          //let forestalUnits = dataSet.filter( data => data.functional_unit_id == id );
+          
+          let req = indexedDB.open("plantar");  
+        
+          req.onsuccess = async function (evt) {
 
-        if(aditionalSuccessLogic)
+              let filteredForestalUnits = [];
+              const db = this.result;
+              let tx = db.transaction(["forestalUnits"], 'readonly');
+              let store = tx.objectStore("forestalUnits");
+              let index = store.index("functional_unit_id");              
+              let singleKeyRange = IDBKeyRange.only(id);
+              let req = index.openCursor(singleKeyRange);
+
+
+              await new Promise( (resolve) =>{
+
+                req.onsuccess = function(event) {
+                
+                  let cursor = event.target.result;
+                  if (cursor) {
+                      // Do something with the matches.                      
+                    let data = cursor.value;
+                    data.general_image = "";
+                    data.id_image = "";
+                    data.reference_image = "";
+                    filteredForestalUnits.push(data);                                         
+                    cursor.continue();
+                  } 
+                  else{
+                        
+                    dispatch(setForestalUnits(filteredForestalUnits));
+      
+                    dispatch(notFetching());
+    
+                    resolve("done");
+                      
+                  }                      
+      
+                }
+    
+              });          
+                
+              return;
+          }
+
+          req.onerror = (error) =>{
+            dispatch(notFetching());
+            return;
+          }
+      }    
+
+      let SuccessCallBack =  successCallBack ? successCallBack :  async (response) => {      
+        
+        console.log("success reponse");
+
+        if(response.data.length > 0)
         {
-          aditionalSuccessLogic();
+          await verifyAndSaveInArray(response.data,"forestalUnits");
         }
 
         dispatch(setForestalUnits(response.data));
+
+        dispatch(notFetching());
+
       }
 
       let ErrorCallBack = () => {
@@ -74,7 +121,7 @@ export const getForestalUnits = (id, successCallBack = null  ,errorCallBack = nu
 }
 
 
-export const createForestUnitPhase1 = (data,successCallBack  ,errorCallBack = null ) => {
+export const createForestUnitPhase1 = (data,successCallBack = null ,errorCallBack = null ) => {
   return async dispatch => {
 
     if(!navigator.onLine)
@@ -83,8 +130,7 @@ export const createForestUnitPhase1 = (data,successCallBack  ,errorCallBack = nu
       let now = new Date().toISOString().split('T');
       data.updated_at = now[0]+" "+now[1].substring(0,8);
       ManageOffline (dispatch,data);
-      Ons.notification.alert({title:"¡Que bien!",message:"¡Unidad forestal guardada en memoria!"});
-      dispatch(goBack());
+      Ons.notification.alert({title:"¡Que bien!",message:"¡Unidad forestal guardada en memoria!"});      
       return;
     }
 
@@ -141,23 +187,23 @@ export const updateForestUnitPhase1 = (id,data,successCallBack,errorCallBack = n
       data.origin = !data.origin ? null : data.origin;
 
 
+
+
       if(!navigator.onLine)
       {
         console.log("Modo offline");
-
         let now = new Date().toISOString().split('T');
-
         data.updated_at = now[0]+" "+now[1].substring(0,8);
-
-        data.id = id;
-        
-        ManageOffline (dispatch,data);
-
-        dispatch(goBack());
+        data.id = id;        
+        ManageOffline (dispatch,data);       
         Ons.notification.alert({title:"¡Que bien!",message:"¡Unidad forestal editada en memoria!"});
         return;
       }
 
+      if(!Number.isInteger(id))
+      {
+        return dispatch(createForestUnitPhase1(data));
+      }
 
       dispatch(fetching());
 
@@ -267,6 +313,11 @@ export const updateForestUnitPhase2 = (id,data,successCallBack, errorCallBack = 
         return;
       }
 
+      if(!Number.isInteger(id))
+      {
+        return dispatch(createForestUnitPhase2(data));
+      }
+
       dispatch(fetching());
 
       let SuccessCallBack = successCallBack ? successCallBack : (response) => {
@@ -365,6 +416,11 @@ export const updateForestUnitPhase3 = (id,data,successCallBack,errorCallBack = n
 
         Ons.notification.alert({title:"¡Que bien!",message:"¡Unidad forestal editada en memoria!"});
         return;
+      }
+
+      if(!Number.isInteger(id))
+      {
+        return dispatch(createForestUnitPhase3(data));
       }
 
       dispatch(fetching());

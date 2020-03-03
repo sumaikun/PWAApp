@@ -1,7 +1,7 @@
 import { Request } from '../../helpers/request';
-import { fetching , notFetching, setFunctionalUnits, resetFunctionalUnits } from "./appActions"
+import { fetching , notFetching, setFunctionalUnits, resetFunctionalUnits, addFunctionalUnit } from "./appActions"
 import { FUNCTIONAL_UNIT_URL, GET_FUNCTIONAL_UNITS  } from "../types"
-import { storeData , getAllFromStore } from '../../helpers/indexDbModels'
+import { storeData , getAllFromStore, verifyAndSaveInArray } from '../../helpers/indexDbModels'
 import Ons from 'onsenui';
 
 
@@ -17,11 +17,9 @@ async function ManageOffline (dispatch,data){
   data.synchroState = false;
 
   await storeData("functionalUnits",data);
-  const dataSet =await getAllFromStore("functionalUnits");
-  console.log(dataSet);
-  dispatch(resetFunctionalUnits());
-  dispatch(setFunctionalUnits(dataSet));  
-
+  
+  dispatch(addFunctionalUnit(data));
+  
 }
 
 export const createFunctionalUnit = (data,componentSuccess) => {
@@ -30,10 +28,10 @@ export const createFunctionalUnit = (data,componentSuccess) => {
       
       if(!navigator.onLine)
       {
-        console.log("Modo offline");
-        componentSuccess(data.project_id);
+        console.log("Modo offline");       
         ManageOffline (dispatch,data);        
         Ons.notification.alert({title:"¡Que bien!", message:"Se ha registrado la unidad funcional en memoria"});
+        componentSuccess();
         return;
       }
 
@@ -63,51 +61,49 @@ export const createFunctionalUnit = (data,componentSuccess) => {
   }
 }
 
-export const getFunctionalUnits = (id, SuccessCallBack, keepFetching = false) => {
+export const getFunctionalUnits = (id) => {
   return async dispatch => {
+
+      dispatch(fetching());
 
       if(!navigator.onLine)
       {
-        console.log("Modo offline");
-        dispatch(notFetching());
-        return;
+          console.log("Modo offline");
+
+          const dataSet = await getAllFromStore("functionalUnits");
+        
+          let functionalUnits = dataSet.filter( data => data.project_id == id );
+
+          dispatch(setFunctionalUnits(functionalUnits));
+
+          dispatch(notFetching());
+
+          return;
       }
 
-
-      console.log(id);
-
-      if(!keepFetching)
-      {
-        dispatch(fetching());
-      }
-
-
-
-      if(!SuccessCallBack)
-      {
-        SuccessCallBack = (response) => {
-
-          if(!keepFetching)
-          {
-            dispatch(notFetching());
-          }
+      
+      let SuccessCallBack = async (response) => {          
 
           if(response.data.length == 0)
           {
             Ons.notification.alert({title:"Espera",message:"Aun no hay unidades funcionales asociadas al proyecto"});
           }
+          else{
+            await verifyAndSaveInArray(response.data,"functionalUnits");
+          }
 
           dispatch(setFunctionalUnits(response.data));
-        }
+
+          dispatch(notFetching());
       }
+      
 
 
       let ErrorCallBack = () => {
         dispatch(notFetching());
       }
 
-      //console.log(String(FUNCTIONAL_UNIT_URL+id));
-
+      
       Request.getRequest(
         GET_FUNCTIONAL_UNITS+id,
         SuccessCallBack,

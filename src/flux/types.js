@@ -5,8 +5,12 @@
 //1.5.5 version with background app on camera
 //1.5.6 file delete on version change
 
+//1.7.5 version with expenses not working properly
+//1.8.6 version with expenses working right 
+
+
 //PROPERTIES
-export const VERSION = "1.5.5";
+export const VERSION = "1.8.6";
 const LOCAL_MODE = false;
 
 //ajax
@@ -35,7 +39,7 @@ export const GO_TO_SST_FORM = "GO_TO_SST_FORM";
 export const GO_TO_ASSISTANT_LIST = "GO_TO_ASSISTANT_LIST";
 
 
-//NATIVE storage
+//NATIVE storage, deprecated
 
 export const SET_NS_APP_STATE = "SET_NS_APP_STATE";
 export const SET_NS_MEMORY_STATE = "SET_NS_MEMORY_STATE";
@@ -56,6 +60,12 @@ export const RESET_FORESTAL_UNITS = "RESET_FORESTAL_UNITS";
 export const SET_FORESTAL_UNITS = "SET_FORESTAL_UNITS";
 export const SET_FORESTAL_UNIT = "SET_FORESTAL_UNIT";
 export const SET_FUNCTIONAL_UNIT = "SET_FUNCTIONAL_UNIT";
+
+//news for indexed db
+
+export const ADD_FUNCTIONAL_UNIT = "ADD_FUNCTIONAL_UNIT";
+export const ADD_FORESTAL_UNIT = "ADD_FORESTAL_UNIT";
+export const ADD_PLANTATION_REPORT = "ADD_PLANTATION_UNIT";
 export const SELECT_PROJECT = "SELECT_PROJECT";
 export const GO_TO_MACHINERY_LIST = "GO_TO_MACHINERY_LIST";
 
@@ -182,7 +192,6 @@ export const UPDATE_PLANTATION_REPORT = window.location.href.indexOf('localhost'
 export const CIVIL_REPORT_URL = window.location.href.indexOf('localhost') > 0 && LOCAL_MODE ? 'http://plantarfuturo.com/test/api/civil-report' : 'https://plantarfuturo.com/ws/api/civil-report';
 
 
-
 // OFFLINE
 
 export const ADD_PLANTATION_REPORT_OFFLINE = "ADD_PLANTATION_REPORT_OFFLINE";
@@ -190,12 +199,6 @@ export const UPDATE_SERVER_PLANTATION_REPORT_OFFLINE = "UPDATE_SERVER_PLANTATION
 export const UPDATE_PLANTATION_REPORT_OFFLINE = "UPDATE_PLANTATION_REPORT_OFFLINE";
 export const REMOVE_FROM_UPDATE_SERVER_PLANTATION_REPORT_OFFLINE = "REMOVE_FROM_UPDATE_SERVER_PLANTATION_REPORT_OFFLINE";
 export const REMOVE_FROM_PLANTATION_REPORT_OFFLINE = "REMOVE_FROM_PLANTATION_REPORT_OFFLINE";
-
-
-
-
-
-
 
   //  Setters
 export const SET_PLANTATION_REPORT_TYPE = "SET_PLANTATION_REPORT_TYPE";
@@ -241,3 +244,32 @@ export const UPDATE_SERVER_RIVER_COLLAPSE_OFFLINE = "UPDATE_SERVER_RIVER_COLLAPS
 export const UPDATE_RIVER_COLLAPSE_OFFLINE = "UPDATE_RIVER_COLLAPSE_OFFLINE";
 export const REMOVE_FROM_UPDATE_SERVER_RIVER_COLLAPSE_OFFLINE = "REMOVE_FROM_UPDATE_SERVER_RIVER_COLLAPSE_OFFLINE";
 export const REMOVE_FROM_UPDATE_RIVER_COLLAPSE_OFFLINE = "REMOVE_FROM_UPDATE_RIVER_COLLAPSE_OFFLINE";
+
+
+//Expenses Module
+
+export const GO_TO_EXPENSES_SELECTION = "GO_TO_EXPENSES_SELECTION";
+
+export const GO_TO_FORM_BOX = "GO_TO_FORM_BOX";
+
+export const GO_TO_FORM_EXPENSES = "GO_TO_FORM_EXPENSES";
+
+export const EXPENSE_URL = BASE_URL+"/api/expense";
+
+export const BOX_URL = BASE_URL+"/api/bill";
+
+export const SET_REQUIRE_EXPENSES = "SET_REQUIRE_EXPENSES";
+
+export const SET_CURRENT_REQUIRE_EXPENSE = "SET_CURRENT_REQUIRE_EXPENSE";
+
+export const SET_BOX_EXPENSES = "SET_BOX_EXPENSES";
+
+export const SET_CURRENT_BOX_EXPENSE = "SET_CURRENT_BOX_EXPENSE";
+
+export const ADD_REQUIRE_EXPENSE = "ADD_REQUIRE_EXPENSE";
+
+export const ADD_BOX_EXPENSE = "ADD_BOX_EXPENSE";
+
+export const SET_EXPENSE_TYPE = "SET_EXPENSE_TYPE";
+
+export const GO_TO_EXPENSES_LIST = "GO_TO_EXPENSES_LIST";

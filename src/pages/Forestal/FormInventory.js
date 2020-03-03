@@ -358,7 +358,7 @@ class FormInventory extends Component {
             </Col>
             <Col>
               <Card style={styles.cardInput}>
-                <Input disableUnderline={true} onChange={this.handleChangeInput} style={styles.textInput} name="waypoint" value={this.state.formData.waypoint}  placeholder="WayPoint" type="text"  />
+                <Input disableUnderline={true} onChange={this.handleChangeInput} style={styles.textInput} name="waypoint" value={this.state.formData.waypoint}  placeholder="WayPoint" type="number"  />
               </Card>
             </Col>
           </Row>

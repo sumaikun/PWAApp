@@ -29,12 +29,17 @@ import reducers from "./flux/reducers/";
 //indexedb
 import { getAllFromStore } from "./helpers/indexDbModels";
 
-import { setFunctionalUnits, resetFunctionalUnits, setForestalUnits,
-   resetForestallUnits } from "./flux/actions";
+import { fetching , notFetching } from "./flux/actions";
+
+// Demo views
+
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 
 var store = createStoreWithMiddleware(reducers);
+
+
+
 
 ReactDOM.render(
     <Provider store={store}>
@@ -50,6 +55,9 @@ ReactDOM.render(
 serviceWorker.unregister();
 
 
+//Prevent stuck in fetching
+store.dispatch(notFetching());
+
 
 var synchroProccess = () =>{
   console.log('online'); 
@@ -64,18 +72,6 @@ var synchroProccess = () =>{
     switch(event.data)
     {
       case "update":
-        console.log("to update info");
-        //update fi
-        let dataSet =await getAllFromStore("functionalUnits");
-        console.log(dataSet);
-        store.dispatch(resetFunctionalUnits());
-        store.dispatch(setFunctionalUnits(dataSet)); 
-        
-        //update fu   
-        dataSet =await getAllFromStore("forestalUnits");
-        console.log(dataSet);
-        store.dispatch(resetForestallUnits()); 
-        store.dispatch(setForestalUnits(dataSet));
         break;
       default:
         break;
@@ -86,7 +82,9 @@ var synchroProccess = () =>{
 
 if(navigator.onLine)
 {
-  synchroProccess();
+  setTimeout(function(){
+      synchroProccess(); 
+  }, 8000);  
 }
 
 window.addEventListener('offline', function(e) { 
@@ -98,3 +96,15 @@ window.addEventListener('offline', function(e) {
 window.addEventListener('online', function(e) { 
   synchroProccess();
 });
+
+
+/* if(mobileAppMode)
+{
+  console.log("cordova app initialized");
+  document.addEventListener("deviceready", appInit);
+}
+else
+{
+  //console.log("app initialized as normal react project");
+  appInit();
+} */

@@ -42,6 +42,17 @@ import ReportList from "../../pages/Plantation/ReportList";
 import CivilReport from "../../pages/Plantation/CivilReport";
 
 
+// expenses
+
+import ExpenseType from "../../pages/Expenses/ExpenseType";
+
+import FormBox from "../../pages/Expenses/FormBox";
+
+import FormExpenses from "../../pages/Expenses/FormExpenses";
+
+import ExpensesList from "../../pages/Expenses/ExpensesList";
+
+
 import { GO_TO_LOGIN,
    GO_TO_MANAGEMENT,
    GO_TO_PROJECTS,
@@ -77,7 +88,12 @@ import { GO_TO_LOGIN,
    GO_TO_SELECT_PLANTATION_REPORT_TYPE,
    GO_TO_PLANTATION_REPORT,
    GO_TO_REPORT_LIST,
-   GO_TO_CIVIL_REPORT} from "../types";
+   GO_TO_CIVIL_REPORT,
+   GO_TO_EXPENSES_SELECTION,
+   GO_TO_FORM_BOX,
+   GO_TO_FORM_EXPENSES,
+   GO_TO_EXPENSES_LIST
+  } from "../types";
 
 
 
@@ -399,19 +415,67 @@ const navigationReducer= (state = initialState, action) => {
       }
       return state;
     
-      case GO_TO_CIVIL_REPORT:
+    case GO_TO_CIVIL_REPORT:
 
-        console.log("Go to civil report");
+      console.log("Go to civil report");
 
-        state = {
-          ...state,
-          currentPagekey: GO_TO_CIVIL_REPORT
-        };
-        if (currentPage.key != GO_TO_CIVIL_REPORT) {
-          state.navigator.pushPage( { component: CivilReport, key: GO_TO_CIVIL_REPORT } );
-        }
-        console.log( state );
-        return state;
+      state = {
+        ...state,
+        currentPagekey: GO_TO_CIVIL_REPORT
+      };
+      if (currentPage.key != GO_TO_CIVIL_REPORT) {
+        state.navigator.pushPage( { component: CivilReport, key: GO_TO_CIVIL_REPORT } );
+      }
+      console.log( state );
+      return state;
+
+    case GO_TO_EXPENSES_SELECTION:
+
+      state = {
+        ...state,
+        currentPagekey: GO_TO_EXPENSES_SELECTION
+      };
+      if (currentPage.key != GO_TO_EXPENSES_SELECTION) {
+        state.navigator.pushPage( { component: ExpenseType, key: GO_TO_EXPENSES_SELECTION } );
+      }
+
+      return state
+
+    case GO_TO_FORM_BOX:
+
+      state = {
+        ...state,
+        currentPagekey: GO_TO_FORM_BOX
+      };
+      if (currentPage.key != GO_TO_FORM_BOX) {
+        state.navigator.pushPage( { component: FormBox, key: GO_TO_FORM_BOX } );
+      }
+
+      return state
+
+    case GO_TO_FORM_EXPENSES:
+
+      state = {
+        ...state,
+        currentPagekey: GO_TO_FORM_EXPENSES
+      };
+      if (currentPage.key != GO_TO_FORM_EXPENSES) {
+        state.navigator.pushPage( { component: FormExpenses, key: GO_TO_FORM_EXPENSES } );
+      }
+
+      return state
+
+    case GO_TO_EXPENSES_LIST:
+
+      state = {
+        ...state,
+        currentPagekey: GO_TO_EXPENSES_LIST
+      };
+      if (currentPage.key != GO_TO_EXPENSES_LIST) {
+        state.navigator.pushPage( { component: ExpensesList, key: GO_TO_EXPENSES_LIST } );
+      }
+
+      return state
 
     case APP_ERROR:
       state = {

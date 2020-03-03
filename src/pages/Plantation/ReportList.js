@@ -34,8 +34,6 @@ import {
   getPlantationReportsByProject,
 
 
-  removeFromPlantationReportUpdate,
-  removeFromOfflinePlantationReport
 
 } from '../../flux/actions';
 
@@ -132,13 +130,43 @@ class ReportList extends Component {
                       return (
                         <div
                           className={'select-report'}
-                          onClick={()=>{
+                          onClick={ async ()=>{
 
                             if(this.props.appState.currentPhase == 6)
                             {
                               //console.log(this.props.appState);
                               //this.props.getDefaultActivitiesByType(this.props.appState.plantationProject.id);
-                              this.props.setPlantationReport( report );                              
+                                                            
+                              
+                              await new Promise( (resolve) =>{
+                      
+                                let self = this;
+          
+                                let req = indexedDB.open("plantar");  
+                                        
+                                req.onsuccess = async function (evt) {
+          
+                                  const db = this.result;
+                                  let tx = db.transaction(["dailyReports"], 'readonly');
+                                  let store = tx.objectStore("dailyReports");
+          
+                                  let req = store.get(report.id);
+                                  req.onsuccess = function(event) {
+                                    console.log("found in db");
+                                    console.log(event);
+                                    self.props.setPlantationReport(event.target.result);
+                                    resolve("done");
+                                  };
+                                  req.onerror = function(error){
+                                    self.props.setPlantationReport( report );
+                                    resolve("errors");
+                                  }
+          
+                                }
+          
+                              });
+                              
+                              
                               this.props.goToCivilReport();                             
                               return;
                             }
@@ -152,35 +180,6 @@ class ReportList extends Component {
                               <span className={'list-counter'}>{ i+1 }</span>
                             </div>
                             <div className={'center'}>
-
-                              <div onClick={(e)=>{
-                                
-                                e.stopPropagation();                      
-                                let self = this;
-
-                                
-                                  Ons
-                                  .notification.confirm({ title:'',message: '¿Deseas eliminar los datos de memoría?' })
-                                  .then(function(res) {
-                                    if(res){
-                                      if(report.ToSynchro)
-                                      {
-                                        self.props.removeFromOfflinePlantationReport(report);
-                                      }
-                                      if(report.ToSynchroEdit)
-                                      {
-                                        self.props.removeFromPlantationReportUpdate(report);
-                                      }
-                                    }
-                                  });
-                                }} 
-                              >
-                              
-                              { report.ToSynchro || report.ToSynchroEdit ?
-                                  <i class="fas fa-wifi" style={{marginLeft:"5px"}} ></i> : null }
-
-                              </div>
-
                               <span className={'project-list-title-font project-list-project-name margin-between-right'}>{ report.report_date }</span>
                               <span className={'project-list-project-info margin-between-left'}>{ parseInt( report.type ) === 1 ? 'ESTABLECIMIENTO' : parseInt( report.type ) === 2 ? 'MANTENIMIENTO' : parseInt( report.type ) === 3 ? 'CIVIL' : '' }</span>
                             </div>
@@ -313,7 +312,5 @@ export default  connect(mapStateToProps, {
 
   // MEMORY ACTIONS
 
-  removeFromOfflinePlantationReport,
-  removeFromPlantationReportUpdate
 
 })(ReportList);

@@ -149,8 +149,37 @@ class ForestalUnitList extends Component {
 
               return (
               <div>
-                <ListItem tappable onClick={()=>{
-                    this.props.setForestalUnit(unit);
+                <ListItem tappable onClick={ async ()=>{
+
+                    await new Promise( (resolve) =>{
+                      
+                      let self = this;
+
+                      let req = indexedDB.open("plantar");  
+                              
+                      req.onsuccess = async function (evt) {
+
+                        const db = this.result;
+                        let tx = db.transaction(["forestalUnits"], 'readonly');
+                        let store = tx.objectStore("forestalUnits");
+
+                        let req = store.get(unit.id);
+                        req.onsuccess = function(event) {
+                          console.log("found in db");
+                          console.log(event);
+                          self.props.setForestalUnit(event.target.result);
+                          resolve("done");
+                        };
+                        req.onerror = function(error){
+                          self.props.setForestalUnit(unit);
+                          resolve("errors");
+                        }
+
+                      }
+
+                    });
+                    
+                    
                     switch(currentPhase)
                     {
                       case 1:
@@ -211,10 +240,7 @@ class ForestalUnitList extends Component {
 
       console.log(this.props.appState);
 
-      forestalUnits = forestalUnits[this.props.appState.currentFunctionalUnit.id] ? forestalUnits[this.props.appState.currentFunctionalUnit.id] : [];
- 
-      //forestalUnits = forestalUnits.reverse();
-
+      
     return (
       <AppPage  title={["Unidad funcional ", <strong>{currentFunctionalUnit.code}</strong>]}
        backButton={true} >

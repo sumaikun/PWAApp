@@ -169,7 +169,12 @@ class CivilReport extends Component {
         if( !activity.hours ){
             activity.hours = null;
         }
+        if( !activity.location ){
+          activity.location = null;
+        }
         });
+
+
 
 
         if ( this.props.appState.plantationReportToEdit ) {
@@ -192,6 +197,10 @@ class CivilReport extends Component {
             
             let civil_report_id = this.props.appState.plantationReportToEdit.id;
             console.log( data );
+
+            data.required_staffs = [];
+            data.required_tools = [];
+
             this.props.updateCivilReport( civil_report_id, data );
         }
         else {
@@ -200,6 +209,8 @@ class CivilReport extends Component {
             //data.report_date = data.report_date.date + " " + data.report_date.hour;
             data.project_id = this.props.appState.plantationProject.id;            
             console.log( data );
+            data.required_staffs = [];
+            data.required_tools = [];
             this.props.createCivilReport( data );
         }
 
@@ -348,6 +359,24 @@ class CivilReport extends Component {
 
                 </Card>
             </Col>
+
+
+            
+            <Col>
+                <Card style={{...styles.cardInput, alignItems:"unset"}}>
+                    <label>Ubicación:</label>
+                    <Input
+                    style={{...styles.dateInput}}
+                    type="text"
+                    name="location"
+                    value={ this.state.formData.activities[activityIndex] ? ( ( this.state.formData.activities[activityIndex].default_activity_id == activity.id.toString() ) && this.state.formData.activities[activityIndex].location ? this.state.formData.activities[activityIndex].location : null ) : null }                       
+                    disabled={this.state.isDisable || !this.state.formData.activities[activityIndex] }
+                    onBlur={ (event) => { this.handleArrayChangeInput(event, activityIndex ) } }
+                    required={ this.state.formData.activities[activityIndex] }
+                    />
+                </Card>
+            </Col>
+        
             
             {
               ( activity.measuring_unit != null ) ?
@@ -562,7 +591,7 @@ class CivilReport extends Component {
                   <Col width="99%">
                           <Card style={styles.greenCard} >
                               <div>
-                                  <img src={this.state.formData.civil_image_1 ? 
+                                  <img src={this.state.formData.civil_image_3 ? 
                                       this.state.formData.civil_image_3 : placeholderImage } style={{width:"100%"}} />
                               </div>
                               <Row>
